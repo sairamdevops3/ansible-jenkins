@@ -1,0 +1,20 @@
+import jenkins.*
+import jenkins.model.*
+import hudson.*
+import hudson.model.*
+
+plugin=Jenkins.instance.getExtensionList(org.jvnet.hudson.plugins.SbtPluginBuilder.DescriptorImpl.class)[0];
+tool = plugin.installations.find {
+  it.name == "{{ JENKINS_SBT_INSTALL }}"
+}
+
+if (tool == null) {
+  println "Registering sbt tool"
+  i=(plugin.installations as List);
+  i.add(new org.jvnet.hudson.plugins.SbtPluginBuilder.SbtInstallation("{{ JENKINS_SBT_INSTALL }}", "/usr/bin/sbt", "", []));
+  plugin.installations=i
+  println "Registering sbt tool $i"
+  plugin.save()
+} else {
+  println "{{ JENKINS_SBT_INSTALL }} tool has been already registered"
+}

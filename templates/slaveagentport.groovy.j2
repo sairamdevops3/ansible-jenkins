@@ -1,0 +1,7 @@
+import jenkins.model.*
+
+def instance = Jenkins.getInstance()
+
+instance.setSlaveAgentPort({{ jenkins_slave_agent_port }})
+
+instance.save()

@@ -1,0 +1,34 @@
+import jenkins.model.*
+import hudson.security.*
+import com.cloudbees.plugins.credentials.*
+
+def instance = Jenkins.getInstance()
+
+println "Security setup. STARTED!"
+
+
+String adminUserNames = "{{ GitHub_Auth_Settings.adminUserNames }}"
+String organizationNames = "{{ GitHub_Auth_Settings.organizationNames }}"
+def authenticatedUserReadPermission = {{ GitHub_Auth_Settings.authenticatedUserReadPermission }}
+def useRepositoryPermissions = {{ GitHub_Auth_Settings.useRepositoryPermissions }}
+def authenticatedUserCreateJobPermission = {{ GitHub_Auth_Settings.authenticatedUserCreateJobPermission }}
+def allowGithubWebHookPermission = {{ GitHub_Auth_Settings.allowGithubWebHookPermission }}
+def allowCcTrayPermission = {{ GitHub_Auth_Settings.allowCcTrayPermission }}
+def allowAnonymousReadPermission = {{ GitHub_Auth_Settings.allowAnonymousReadPermission }}
+def allowAnonymousJobStatusPermission = {{ GitHub_Auth_Settings.allowAnonymousJobStatusPermission }}
+
+AuthorizationStrategy authorizationStrategy = new org.jenkinsci.plugins.GithubAuthorizationStrategy(
+adminUserNames,
+authenticatedUserReadPermission,
+useRepositoryPermissions,
+authenticatedUserCreateJobPermission,
+organizationNames,
+allowGithubWebHookPermission,
+allowCcTrayPermission,
+allowAnonymousReadPermission,
+allowAnonymousJobStatusPermission)
+
+instance.setAuthorizationStrategy(authorizationStrategy)
+instance.save()
+println "process success"
+println "Security setup. Complete!"

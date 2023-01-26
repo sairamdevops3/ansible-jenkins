@@ -1,0 +1,33 @@
+import jenkins.model.*
+import hudson.model.*
+
+if (!Jenkins.instance.isQuietingDown()) {
+def authz_strategy = new hudson.security.ProjectMatrixAuthorizationStrategy()
+authz_strategy.add(Jenkins.ADMINISTER, '{{ JENKINS_ADMIN_GROUP }}')
+
+def installed_plugins = Jenkins.instance.pluginManager.getPlugins()*.getShortName()
+//set anonymous permissions
+     if('embeddable-build-status' in installed_plugins) {
+         //only add permission if embeddable-build-status plugin is installed
+         authz_strategy.add(this.class.classLoader.loadClass("org.jenkinsci.plugins.badge.PublicBadgeAction").VIEW_STATUS, 'anonymous')
+ }
+
+ authz_strategy.add(Item.DISCOVER, 'anonymous')
+ authz_strategy.add(Jenkins.READ, 'authenticated')
+ println "Jenkins.READ  authenticated done "
+ authz_strategy.add(View.READ, 'authenticated')
+ println "View.READ authenticated done "
+
+//setting developers
+authz_strategy.add(Jenkins.READ, '{{ JENKINS_DEVELOPER_GROUP }}')
+authz_strategy.add(hudson.model.Item.BUILD, '{{ JENKINS_DEVELOPER_GROUP }}')
+authz_strategy.add(hudson.model.Item.CANCEL, '{{ JENKINS_DEVELOPER_GROUP }}')
+authz_strategy.add(hudson.model.Item.DISCOVER, '{{ JENKINS_DEVELOPER_GROUP }}')
+authz_strategy.add(hudson.model.Item.READ, '{{ JENKINS_DEVELOPER_GROUP }}')
+
+ Jenkins.instance.setAuthorizationStrategy(authz_strategy)
+ println "Jenkins.instance.setAuthorizationStrategy(authz_strategy) "
+ Jenkins.instance.save()
+ println "Configured GitHub OAuth for {{ GitHub_OAuth_Settings.githubweburi }}"
+
+ }

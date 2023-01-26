@@ -1,0 +1,29 @@
+---
+#- name: Wait until port 22 is available for ssh
+#  wait_for: port=22
+
+- name: upgrade all packages
+  yum: name=* state=latest
+
+- name: install ntpd
+  yum: name=ntp state=latest
+
+- name: Remove public NTPD servers
+  lineinfile: 
+     dest: /etc/ntp.conf
+     regexp: '^server .*\.ntp\.org.*$'
+     state: absent
+  when: ntp_servers is defined
+
+- name: Add NTPD servers
+  lineinfile:
+     dest: /etc/ntp.conf
+     insertafter: '^# Please consider joining the pool.*$'
+     line: "server {{ item }}"
+  with_items: "{{ ntp_servers | default([]) }}"
+  when: ntp_servers is defined
+
+
+- name: Enable NTPD
+  service: name=ntpd enabled=true state=restarted
+

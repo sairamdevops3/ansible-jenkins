@@ -1,0 +1,22 @@
+---
+
+- file: dest={{ jenkins_home }}/.ssh state=directory
+
+- user:
+    name: "{{ jenkins_process_user }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: "{{ jenkins_home }}/.ssh/id_rsa"
+
+- command:  cp "{{ jenkins_home }}/.ssh/id_rsa.pub" /home/centos/.ssh/id_rsa.pub
+- command: cp "{{ jenkins_home }}/.ssh/id_rsa"  /home/centos/.ssh/id_rsa
+
+- file: path=/home/centos/.ssh mode=0744 recurse=yes owner=centos group=centos
+
+- name: jenkins-ssh | Setup SSH authorized keys
+  shell: cat "{{ jenkins_home }}/.ssh/id_rsa.pub" >>  "{{ jenkins_home }}"/.ssh/authorized_keys
+
+- name: jenkins-ssh | change file permissions
+  file: path=/var/lib/jenkins/.ssh mode=0700 recurse=yes owner=jenkins group=jenkins
+
+#copy the id_rsa.pub files to slaves authorized_keys

@@ -1,0 +1,53 @@
+---
+ plugins:
+
+   - name: sbt
+     version: 1.5
+   - name: golang
+     version: 1.2
+   - name: slack
+     version: 2.2
+   - name: ruby-runtime
+     version: 0.12
+
+
+   - name: embeddable-build-status
+     version: 1.9
+   - name: github-oauth
+     version: 0.27
+   - name: git
+     version: 3.3.1
+   - name: git-client
+     version: 2.4.6
+   - name: github
+     version: 1.27.0
+   - name: github-api
+     version: 1.85.1
+   - name: jira
+     version: 2.3.1
+   - name: workflow-aggregator
+     version: 2.5
+   - name: copyartifact
+     version: 1.38.1
+   - name: jclouds-jenkins
+     version: 2.14
+   - name: ssh-slaves
+     version: 1.20
+   - name: ssh-credentials
+     version: 1.13
+   - name: active-directory
+     version: 2.6
+   - name: matrix-auth
+     version: 1.7
+   - name: job-dsl
+     version: 1.64
+   - name: monitoring
+     version: 1.68.1
+   - name: dependency-check-jenkins-plugin
+     version: 2.0.1.1
+   - name: token-macro
+     version: 2.1
+   - name: mask-passwords
+     version: 2.10.1
+   - name: parameterized-trigger
+     version: 2.35

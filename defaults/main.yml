@@ -1,0 +1,97 @@
+---
+# defaults file for ansible-jenkins
+
+# default Jenkins packaging URL.
+jenkins_pkg_url: "http://pkg.jenkins-ci.org/redhat/"
+
+# Change this to `latest` to update Jenkins if a newer version is available.
+jenkins_package_state: present
+
+jenkins_connection_delay: 5
+jenkins_connection_retries: 60
+jenkins_home: /var/lib/jenkins
+jenkins_hostname: localhost
+jenkins_http_port: 8080
+jenkins_jar_location: /opt/jenkins-cli.jar
+jenkins_plugins: []
+jenkins_url_prefix: ""
+jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
+jenkins_plugin_updates_expiration: 86400
+jenkins_plugin_timeout: 600
+
+jenkins_admin_username: admin
+jenkins_admin_password: admin
+jenkins_admin_password_file: ""
+jenkins_admin_token: ""
+jenkins_admin_token_file: ""
+
+jenkins_process_user: jenkins
+jenkins_process_group: "{{ jenkins_process_user }}"
+
+jenkins_java_cmd: "JENKINS_JAVA_CMD"
+jenkins_java_cmd_val: "/usr/local/java/bin/java"
+
+jenkins_etc_init_file: "/etc/rc.d/init.d/jenkins"
+
+jenkins_init_changes:
+  - option: "JENKINS_ARGS"
+    value: "--prefix={{ jenkins_url_prefix }}"
+  - option: "{{ jenkins_java_options_env_var }}"
+    value: "{{ jenkins_java_options }}"
+  - option: "{{ jenkins_java_cmd }}"
+    value: "{{ jenkins_java_cmd_val }}"
+
+jenkins_slave_agent_port: 38849
+jenkins_slave_executors: 5
+jenkins_slave_label_num: 0
+jenkins_slave_node: "{{ jenkins_home }}/nodes"
+jenkins_slave_secret: ""
+ntp_servers:
+  - time.google.com
+  - time2.google.com
+
+#SERVICE LEVEL ACCOUNT
+GIT_USER: "sairam"
+GIT_USER_ID: "sai_git_user"
+GIT_USER_DESC: "GITUSER service level account for GHE"
+GITHUB_ORG: "sairamdevops"
+GITHUB_CLINT_ID: "bb446rrtf88ha6"
+#DO NOT CHECKIN ACTUAL Secret
+GITHUB_SECRET_ID: ""
+GITHUB_OAUTH_SCOPES: "read:org,user:email"
+
+JENKINS_ADMIN_GROUP: "{{ GITHUB_ORG }}*{{ GITHUB_ORG }}-admins"
+JENKINS_DEVELOPER_GROUP: "{{ GITHUB_ORG }}*{{ GITHUB_ORG }}-developers"
+
+jenkins_groovy_directory: "{{ jenkins_home }}/init.groovy.d"
+jenkins_groovy_scripts:
+     - updateCenterRefresh.groovy.j2
+     - githubSecurityRealm.groovy.j2
+     - projectMatrixAuthorization.groovy.j2
+     - slaveagentport.groovy.j2
+     - GitUser.groovy.j2
+     - slavesshcreds.groovy.j2
+     - noMasterExecution.groovy.j2
+
+jenkins_id_rsa_pub_file: "{{ jenkins_home }}/.ssh/id_rsa.pub"
+
+
+GitHub_OAuth_Settings:
+  githubweburi: "https://github.com"
+  githubapiuri: "https://github.com/api/v3/"
+  clientid: "{{ GITHUB_CLINT_ID }}"
+  clientsecret: "{{ GITHUB_SECRET_ID }}"
+  oauthscopes: "{{ GITHUB_OAUTH_SCOPES }}"
+
+GitHub_Auth_Settings:
+  adminUserNames: "admin,sairamdevops"
+  organizationNames: ""
+  authenticatedUserReadPermission: "true"
+  useRepositoryPermissions: "true"
+  authenticatedUserCreateJobPermission: "true"
+  allowGithubWebHookPermission: "true"
+  allowCcTrayPermission: "false"
+  allowAnonymousReadPermission: "false"
+  allowAnonymousJobStatusPermission: "false"
+
+JENKINS_SBT_INSTALL: "sbt-1.0.0-m4"

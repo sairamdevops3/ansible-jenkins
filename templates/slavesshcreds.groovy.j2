@@ -1,0 +1,17 @@
+import jenkins.*
+import hudson.*
+import com.cloudbees.plugins.credentials.*
+import com.cloudbees.plugins.credentials.common.*
+import com.cloudbees.plugins.credentials.domains.*
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
+import hudson.plugins.sshslaves.*;
+import hudson.model.*
+import jenkins.model.*
+import hudson.security.*
+
+String keyfile = "{{ jenkins_home }}/.ssh/id_rsa"
+ global_domain = Domain.global()
+credentials_store = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+)[0].getStore()
+credentials = new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL,"jenkinsid","jenkins",new BasicSSHUserPrivateKey.FileOnMasterPrivateKeySource(keyfile),"","")
+credentials_store.addCredentials(global_domain, credentials)
